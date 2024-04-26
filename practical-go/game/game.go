@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"slices"
+	"sort"
 )
 
 func main() {
@@ -57,6 +58,52 @@ func main() {
 	fmt.Println(p1.Keys)
 	p1.FoundKey(Jade)
 	fmt.Println(p1.Keys)
+
+	players := []Player{
+		{
+			Name: "Jack Nelson",
+			Item: Item{2, 3},
+		},
+		{
+			Name: "Giovanni",
+			Item: Item{500, 600},
+		},
+		{
+			Name: "Malaquias",
+			Item: Item{400, 300},
+		},
+	}
+
+	fmt.Println(players)
+
+	sortByDistance(players, 500, 600)
+
+	fmt.Println(players)
+}
+
+type ByDistance []Player
+
+func (a ByDistance) Len() int      { return len(a) }
+func (a ByDistance) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByDistance) Less(i, j int) bool {
+	first := a[i].X + a[i].Y
+	second := a[j].X + a[j].Y
+	return first < second
+}
+
+func sortByDistance(players []Player, x, y int) {
+	distance := x + y
+	sort.Slice(players, func(i, j int) bool {
+		first := (players[i].X + players[i].Y) - distance
+		second := (players[j].X + players[j].Y) - distance
+		if first < 0 {
+			first *= -1
+		}
+		if second < 0 {
+			second *= -1
+		}
+		return first < second
+	})
 }
 
 // String representation of our type
